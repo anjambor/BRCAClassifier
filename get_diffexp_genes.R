@@ -33,5 +33,6 @@ adj_pvals = p.adjust(glm_res$table$PValue, method = "BH")
 fdr_threshold = 0.05
 
 degs = glm_res$table[(adj_pvals <= fdr_threshold) & (abs(glm_res$table$logFC) >= 1), ]
-ensg_ids = rownames(degs)
-write.csv(ensg_ids, 'features/diff_exp_genes.csv')
+ensg_ids = data.frame(rownames(degs))
+colnames(ensg_ids) = NULL
+write.csv(ensg_ids, 'features/diff_exp_genes.csv', row.names = FALSE)
