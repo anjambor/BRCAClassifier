@@ -31,7 +31,7 @@ with open('data/processed/idx_to_sample.pkl', 'wb') as f:
 all_filtered = all_filtered.transpose()
 
 X_filtered = np.matrix(all_filtered)
-y_filtered = np.matrix([1 if label[0] == 'C' else 0 for label in all_filtered.index])
+y_filtered = np.matrix([1 if label[0] == 'C' else 0 for label in all_filtered.index]).astype('uint8')
 
 np.savetxt('data/processed/X_filtered.csv', X_filtered, delimiter=',')
-np.savetxt('data/processed/y_filtered.csv', y_filtered, delimiter=',')
+np.savetxt('data/processed/y_filtered.csv', y_filtered, fmt='%i', delimiter=',')
