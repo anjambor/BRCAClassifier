@@ -27,10 +27,8 @@ counts = all_seurat@assays$RNA@counts
 use_genes = rowSums(is.na(counts)) == 0
 counts = counts[use_genes, ]
 
-# can't filter by expr w/o norm factors
-# instead set a minimum threshold
-
-min_thresh = 2 # require tpm minimum
+# two options, use manual thersholds for expression, or use edger thresholds
+min_thresh = 2 # required tmp minimum
 n_sample_thresh = 3 # require threshold reached in n samples
 
 use_genes2 = rowSums(counts>=min_thresh) >= n_sample_thresh
@@ -39,6 +37,7 @@ print(dim(counts))
 
 dge = DGEList(counts = counts, group = all_seurat$group)
 
+# this will remove genes based on edgers criteria which is more stringent
 # keep = filterByExpr(dge)
 # dge = dge[keep, ,keep.lib.sizes=FALSE]
 
