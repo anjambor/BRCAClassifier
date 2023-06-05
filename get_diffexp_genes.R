@@ -1,5 +1,5 @@
-# setwd('/Users/alexanderjambor/Desktop/UCSD/SP23/BENG203/GroupProject/BRCAClassifier/')
-setwd('/home/ethan/homework/cse283/BRCAClassifier/')
+setwd('/Users/alexanderjambor/Desktop/UCSD/SP23/BENG203/GroupProject/BRCAClassifier/')
+# setwd('/home/ethan/homework/cse283/BRCAClassifier/')
 
 library(Seurat)
 library(dplyr)
@@ -22,39 +22,23 @@ rm(normal_seurat)
 rm(brca_seurat)
 
 counts = all_seurat@assays$RNA@counts
-
-# probably unesesary 
-use_genes = rowSums(is.na(counts)) == 0
-counts = counts[use_genes, ]
-
-# two options, use manual thersholds for expression, or use edger thresholds
-min_thresh = 2 # required tmp minimum
-n_sample_thresh = 3 # require threshold reached in n samples
-
-use_genes2 = rowSums(counts>=min_thresh) >= n_sample_thresh
-counts = counts[use_genes2, ]
-print(dim(counts))
-
 dge = DGEList(counts = counts, group = all_seurat$group)
 
-# this will remove genes based on edgers criteria which is more stringent
-# keep = filterByExpr(dge)
-# dge = dge[keep, ,keep.lib.sizes=FALSE]
-
+keep = filterByExpr(dge)
+dge = dge[keep, ,keep.lib.sizes=FALSE]
 print(dim(dge))
 
 des = model.matrix(~ all_seurat$group)
-dge = estimateDisp(dge, des, , trend.method='locfit')
+dge = estimateDisp(dge, des, trend.method='locfit')
+
 fit = glmQLFit(dge, des)
 glm_res = glmQLFTest(fit)
-
 adj_pvals = p.adjust(glm_res$table$PValue, method = "BY")
+
 fdr_threshold = 0.05
 lfc_threshold = 1
-
-# print(head(glm_res$table))
-
 degs = glm_res$table[((adj_pvals <= fdr_threshold) & (abs(glm_res$table$logFC) >= lfc_threshold)), ]
+
 ensg_ids = data.frame(rownames(degs))
 colnames(ensg_ids) = NULL
 print(dim(ensg_ids))

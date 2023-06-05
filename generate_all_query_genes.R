@@ -30,8 +30,8 @@ literature_genes = getBM(attributes = attributes,
                          values = literature_genes,
                          mart = dataset)
 
-literature_genes = literature_genes$ensembl_gene_id. # 689 ENSG IDs
+literature_genes = literature_genes2$ensembl_gene_id # 689 ENSG IDs
 
-all_genes = data.frame(union(union(literature_genes, fusion_genes), diff_exp_genes))
+all_genes = data.frame(union(union(literature_genes, fusion_genes), diff_exp_genes)) # 772 ENSG IDs
 colnames(all_genes) = NULL
 write.csv(all_genes, 'features/all_genes.csv', row.names = FALSE)
