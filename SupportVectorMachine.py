@@ -5,9 +5,7 @@ warnings.warn = warn
 
 
 
-from sklearn.linear_model import LogisticRegression
-
-from sklearn.linear_model import LogisticRegressionCV
+from sklearn.svm import SVC
 
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import roc_curve, precision_recall_curve, accuracy_score, f1_score, auc
@@ -26,14 +24,6 @@ os.chdir('/Users/alexanderjambor/Desktop/UCSD/SP23/BENG203/GroupProject/BRCAClas
 X = np.loadtxt('./data/processed/recurrent_vs_nonrecurrent/X_filtered.csv', delimiter=',')
 y = np.loadtxt('./data/processed/recurrent_vs_nonrecurrent/y_filtered.csv', delimiter=',')
 
-l1_ratios = [x/10 for x in range(0, 11, 1)]
-model_tmp = LogisticRegressionCV(solver='saga', cv=5, scoring='f1', class_weight='balanced', penalty='elasticnet', Cs=10, l1_ratios=l1_ratios)
-model_tmp = model_tmp.fit(X, y)
-
-best_C = model_tmp.C_.item()
-best_l1_ratio = model_tmp.l1_ratio_.item()
-
-model = LogisticRegression(solver='saga', class_weight='balanced', penalty='elasticnet', C=best_C, l1_ratio=best_l1_ratio)
 
 auroc_vals = []
 auprc_vals = []
@@ -46,6 +36,8 @@ precision_vecs = []
 recall_vecs = []
 
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=2)
+
+model = SVC(probability=True, kernel='linear', class_weight='balanced')
 
 for train_idx, test_idx in cv.split(X, y):
     X_train, X_test = X[train_idx], X[test_idx]
