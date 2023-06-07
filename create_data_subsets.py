@@ -64,6 +64,6 @@ data2_filtered = data2_filtered.transpose()
 X2_filtered = np.matrix(data2_filtered)
 y2_filtered = np.matrix([1 if label in brca_ids else 0 for label in data2_filtered.index]).astype('uint8')
 
-np.savetxt(f'{target_dir}/2/{tag}/X_filtered.csv', X_filtered, fmt='%f', delimiter=',')
-np.savetxt(f'{target_dir}/2/{tag}/y_filtered.csv', y_filtered, fmt='%i', delimiter=',')
+np.savetxt(f'{target_dir}/2/{tag}/X_filtered.csv', X2_filtered, fmt='%f', delimiter=',')
+np.savetxt(f'{target_dir}/2/{tag}/y_filtered.csv', y2_filtered, fmt='%i', delimiter=',')
 
