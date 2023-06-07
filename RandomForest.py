@@ -3,6 +3,7 @@ def warn(*args, **kwargs):
 import warnings
 warnings.warn = warn
 
+from imblearn.over_sampling import SMOTE
 from sklearn.ensemble import RandomForestClassifier
 
 from sklearn.model_selection import StratifiedKFold
@@ -36,11 +37,14 @@ oob_errors = []
 
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=2)
 
-model = RandomForestClassifier(oob_score=True, class_weight='balanced')
+model = RandomForestClassifier(oob_score=True)
 
 for train_idx, test_idx in cv.split(X, y):
     X_train, X_test = X[train_idx], X[test_idx]
     y_train, y_test = y[train_idx], y[test_idx]
+
+    smote = SMOTE(random_state=42)
+    X_train, y_train = smote.fit_resample(X_train, y_train)
 
     model.fit(X_train, y_train)
     y_proba = model.predict_proba(X_test)[:, 1]
