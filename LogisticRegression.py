@@ -27,6 +27,8 @@ os.chdir('/Users/alexanderjambor/Desktop/UCSD/SP23/BENG203/GroupProject/BRCAClas
 X = np.loadtxt('./data/processed/recurrent_vs_nonrecurrent/X_filtered.csv', delimiter=',')
 y = np.loadtxt('./data/processed/recurrent_vs_nonrecurrent/y_filtered.csv', delimiter=',')
 
+X = np.log2(X+1)
+
 l1_ratios = [x/10 for x in range(0, 11, 1)]
 model_tmp = LogisticRegressionCV(solver='saga', cv=5, scoring='f1', class_weight='balanced', penalty='elasticnet', Cs=10, l1_ratios=l1_ratios)
 model_tmp = model_tmp.fit(X, y)
