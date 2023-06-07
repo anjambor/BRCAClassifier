@@ -3,16 +3,21 @@ def warn(*args, **kwargs):
 import warnings
 warnings.warn = warn
 
-from imblearn.over_sampling import SMOTE
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
 
-from sklearn.model_selection import RepeatedStratifiedKFold
+from sklearn.model_selection import train_test_split
+from sklearn.inspection import permutation_importance
+from sklearn.svm import SVC
 
+from sklearn.svm import SVC
 
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import roc_curve, precision_recall_curve, accuracy_score, f1_score, auc
 import matplotlib.pyplot as plt
+
+
+import numpy as np
+import os
+
 
 import numpy as np
 import os
@@ -21,12 +26,37 @@ os.chdir('/Users/alexanderjambor/Desktop/UCSD/SP23/BENG203/GroupProject/BRCAClas
 
 # 629 vs 690 features
 
-# X = np.loadtxt('./data/processed/normal_vs_cancer/X_filtered.csv', delimiter=',')
-# y = np.loadtxt('./data/processed/normal_vs_cancer/y_filtered.csv', delimiter=',')
-
 X = np.loadtxt('./data/processed/recurrent_vs_nonrecurrent/X_filtered.csv', delimiter=',')
 y = np.loadtxt('./data/processed/recurrent_vs_nonrecurrent/y_filtered.csv', delimiter=',')
 
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+model = SVC(probability=True, kernel='linear', class_weight='balanced')
+
+"""
+X_train, X_val, y_train, y_val = train_test_split(X, y)
+scaler.fit(X_train)
+
+# Transform both the training and testing data
+X_train = scaler.transform(X_train)
+X_val = scaler.transform(X_val)
+
+model.fit(X_train, y_train)
+
+perm_imp = permutation_importance(model, X_val, y_val, n_repeats=10, random_state=13)
+imps = perm_imp.importances_mean
+
+
+idx_imp = [(idx, imp) for idx, imp in enumerate(imps)]
+idx_imp = sorted(idx_imp, key=lambda x: x[1], reverse=True)
+
+imp_feature_idxs = [x[0] for x in idx_imp[:500]]
+
+
+X = X[:, imp_feature_idxs]
+"""
 
 auroc_vals = []
 auprc_vals = []
@@ -37,30 +67,23 @@ fpr_vecs = []
 tpr_vecs = []
 precision_vecs = []
 recall_vecs = []
-oob_errors = []
 
-cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=10, random_state=2)
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=2)
 
-model = RandomForestClassifier(oob_score=True)
+model = SVC(probability=True, kernel='linear', class_weight='balanced')
 
 for train_idx, test_idx in cv.split(X, y):
     X_train, X_test = X[train_idx], X[test_idx]
     y_train, y_test = y[train_idx], y[test_idx]
 
-    scaler = StandardScaler()
+
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
 
-    smote = SMOTE(random_state=42)
-    X_train, y_train = smote.fit_resample(X_train, y_train)
-
     model.fit(X_train, y_train)
     y_proba = model.predict_proba(X_test)[:, 1]
     y_pred = model.predict(X_test)
-
-    oob_error = 1 - model.oob_score_
-    oob_errors.append(oob_error)
 
     fpr, tpr, _ = roc_curve(y_test, y_proba)
     fpr_vecs.append(fpr)
@@ -106,3 +129,5 @@ plt.ylabel('True Positive Rate')
 
 plt.legend()
 plt.show()
+
+

@@ -6,10 +6,11 @@ warnings.warn = warn
 
 
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 
 from sklearn.linear_model import LogisticRegressionCV
 
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.metrics import roc_curve, precision_recall_curve, accuracy_score, f1_score, auc
 import matplotlib.pyplot as plt
 
@@ -45,11 +46,16 @@ tpr_vecs = []
 precision_vecs = []
 recall_vecs = []
 
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=2)
+cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=10, random_state=12)
 
 for train_idx, test_idx in cv.split(X, y):
     X_train, X_test = X[train_idx], X[test_idx]
     y_train, y_test = y[train_idx], y[test_idx]
+
+    scaler = StandardScaler()
+    scaler.fit(X_train)
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
 
     model.fit(X_train, y_train)
     y_proba = model.predict_proba(X_test)[:, 1]
