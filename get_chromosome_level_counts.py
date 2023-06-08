@@ -48,15 +48,19 @@ chromosome_tpm = count_matrix.groupby('chromosome').sum()
 use_chroms = chromosome_tpm.sum(axis=1) > 50000
 # remove low occurance chroms 
 
-chromosome_tpm = chromosome_tpm[use_chroms]
+chromosome_tpm = np.log2(chromosome_tpm[use_chroms]+1)
 # chromosome_tpm = (chromosome_tpm *1e6)/chromosome_tpm.sum(axis=0)
+
+from scipy.stats import differential_entropy
+entropy = chromosome_tpm.apply(differential_entropy, axis=0)
+chromosome_tpm = pd.concat([chromosome_tpm, entropy.T], axis=0)
 
 chromosome_tpm.to_csv('features/chromosome_tpm.csv')
 
-chroms_use = ['7', ]
-              # '5', '13', '18', '9', '8', '12']
-chromosome_tpm.loc[chroms_use].to_csv('features/min_chrom.csv')
+# chroms_use = ['7', ]
+#               # '5', '13', '18', '9', '8', '12']
+# chromosome_tpm.loc[chroms_use].to_csv('features/min_chrom.csv')
 
-chroms_for_recur = ['1', '10', '17', '21']
+# chroms_for_recur = ['1', '10', '17', '21']
 
-chromosome_tpm.loc[chroms_for_recur].to_csv('features/recur_chrom.csv')
+# chromosome_tpm.loc[chroms_for_recur].to_csv('features/recur_chrom.csv')
