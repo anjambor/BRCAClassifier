@@ -55,7 +55,7 @@ idx_imp = sorted(idx_imp, reverse=True, key=lambda x: x[1])
 
 last_zero_idx = [x[0] for x in idx_imp if x[1]==0][-1]
 end_idx = [idx for idx, x in enumerate(idx_imp) if x[0]==last_zero_idx][0] + 1
-keep_idxs = [x[0] for x in idx_imp[:end_idx]]
+keep_idxs = [x[0] for x in idx_imp[:int(end_idx/4)]]
 
 ##############
 

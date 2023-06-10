@@ -7,6 +7,7 @@ warnings.warn = warn
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 
 from sklearn.linear_model import LogisticRegressionCV
 

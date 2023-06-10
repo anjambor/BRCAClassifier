@@ -1,0 +1,14 @@
+gene,diag/prog,Cancer type,
+let-7c,diagnostic,breast,ENSG00000199030
+miR-10,diagnostic,breast,ENSG00000284038
+miR-16,diagnostic,breast,ENSG00000208006
+miR-18a,both,breast,ENSG00000283815
+miR-21,both,breast,ENSG00000284190
+miR-106b,both,breast,ENSG00000208036
+miR29a,diagnostic,breast,ENSG00000284032
+miR-34a,both,breast,ENSG00000228526
+miR34b,diagnostic,breast,ENSG00000207811
+miR34c,diagnostic,breast,ENSG00000207562
+miR-125b,both,breast,ENSG00000207971
+miR-155,both,breast,ENSG00000283904
+miR-125a,prognostic,breast,ENSG00000208008

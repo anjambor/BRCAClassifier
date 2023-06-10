@@ -43,3 +43,21 @@ ensg_ids = data.frame(rownames(degs))
 colnames(ensg_ids) = NULL
 print(dim(ensg_ids))
 write.csv(ensg_ids, 'features/diff_exp_genes.csv', row.names = FALSE)
+
+
+################################################
+
+# tmp = NormalizeData(all_seurat)
+# tmp = ScaleData(tmp)
+# tmp = FindVariableFeatures(tmp)
+# tmp = RunPCA(tmp)
+# 
+# tmp = RunUMAP(tmp, dims=1:20, reduction.use = 'pca')
+# 
+# DimPlot(tmp, reduction = 'pca', group.by = 'group')
+
+
+
+
+
+

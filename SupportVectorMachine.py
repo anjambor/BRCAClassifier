@@ -19,11 +19,11 @@ os.chdir('/Users/alexanderjambor/Desktop/UCSD/SP23/BENG203/GroupProject/BRCAClas
 
 # 629 vs 690 features
 
-# X = np.loadtxt('./data/processed/normal_vs_cancer/X_filtered.csv', delimiter=',')
-# y = np.loadtxt('./data/processed/normal_vs_cancer/y_filtered.csv', delimiter=',')
+X = np.loadtxt('./data/processed/1/normal_vs_cancer/X_filtered.csv', delimiter=',')
+y = np.loadtxt('./data/processed/1/normal_vs_cancer/y_filtered.csv', delimiter=',')
 
-X = np.loadtxt('./data/processed/recurrent_vs_nonrecurrent/X_filtered.csv', delimiter=',')
-y = np.loadtxt('./data/processed/recurrent_vs_nonrecurrent/y_filtered.csv', delimiter=',')
+# X = np.loadtxt('./data/processed/1/recurrent_vs_nonrecurrent/X_filtered.csv', delimiter=',')
+# y = np.loadtxt('./data/processed/1/recurrent_vs_nonrecurrent/y_filtered.csv', delimiter=',')
 
 X = np.log2(X+1)
 
@@ -37,9 +37,9 @@ tpr_vecs = []
 precision_vecs = []
 recall_vecs = []
 
-cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=10, random_state=2)
+cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=1, random_state=7)
 
-model = SVC(probability=True, kernel='linear', class_weight='balanced')
+model = SVC(probability=True, kernel='linear')
 
 
 for train_idx, test_idx in cv.split(X, y):
